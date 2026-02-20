@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue Kanban Ticket (DRAG & DROP) -->
+    <record id="view_project_ticket_kanban" model="ir.ui.view">
+        <field name="name">project.ticket.kanban</field>
+        <field name="model">project.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state"
+                    class="o_kanban_small_column"
+                    on_create="quick_create"
+                    quick_create_view="view_project_ticket_form_quick">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="ticket_type"/>
+                <field name="assigned_to"/>
+                <field name="story_points"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <!-- En-tête avec numéro et type -->
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <span class="badge" t-att-class="'badge-' + (record.ticket_type.raw_value == 'bug' ? 'danger' : record.ticket_type.raw_value == 'epic' ? 'info' : 'secondary')">
+                                            <field name="ticket_type"/>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Titre du ticket -->
+                                <div class="o_kanban_record_body">
+                                    <field name="title"/>
+                                </div>
+
+                                <!-- Pied avec assigné et priorité -->
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                        <t t-if="record.story_points.raw_value">
+                                            <span class="badge badge-pill badge-primary">
+                                                <i class="fa fa-star"/> <field name="story_points"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="assigned_to" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue Formulaire Ticket -->
+    <record id="view_project_ticket_form" model="ir.ui.view">
+        <field name="name">project.ticket.form</field>
+        <field name="model">project.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Ticket">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="title" placeholder="Titre du ticket..."/>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="ticket_type"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="assigned_to" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="sprint_id" options="{'no_create': True}"/>
+                            <field name="story_points"/>
+                            <field name="estimated_hours" widget="float_time"/>
+                            <field name="spent_hours" widget="float_time"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Description détaillée..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Formulaire Quick Create -->
+    <record id="view_project_ticket_form_quick" model="ir.ui.view">
+        <field name="name">project.ticket.form.quick</field>
+        <field name="model">project.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="title"/>
+                    <field name="ticket_type"/>
+                    <field name="project_id" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Liste Ticket -->
+    <record id="view_project_ticket_list" model="ir.ui.view">
+        <field name="name">project.ticket.tree</field>
+        <field name="model">project.ticket</field>
+        <field name="arch" type="xml">
+            <list string="Tickets">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="ticket_type" widget="badge"/>
+                <field name="project_id"/>
+                <field name="assigned_to" widget="many2one_avatar_user"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-info="state == 'todo'"/>
+                <field name="story_points"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action Ticket -->
+    <record id="action_project_ticket" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">project.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>

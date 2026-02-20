@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_management_user,project.management.user,model_project_management,group_project_user,1,1,1,0
+access_project_management_manager,project.management.manager,model_project_management,group_project_manager,1,1,1,1
+access_project_sprint_user,project.sprint.user,model_project_sprint,group_project_user,1,1,1,0
+access_project_sprint_manager,project.sprint.manager,model_project_sprint,group_project_manager,1,1,1,1
+access_project_ticket_user,project.ticket.user,model_project_ticket,group_project_user,1,1,1,0
+access_project_ticket_manager,project.ticket.manager,model_project_ticket,group_project_manager,1,1,1,1
+access_project_ticket_tag_user,project.ticket.tag.user,model_project_ticket_tag,group_project_user,1,0,0,0
+access_project_ticket_tag_manager,project.ticket.tag.manager,model_project_ticket_tag,group_project_manager,1,1,1,1

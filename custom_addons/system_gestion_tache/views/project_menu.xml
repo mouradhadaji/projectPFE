@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ============================================================ -->
+        <!-- MENU PRINCIPAL (Root Menu)                                   -->
+        <!-- ============================================================ -->
+        <menuitem id="menu_project_management_root"
+                  name="Gestion Projets"
+                  sequence="10"
+                  web_icon="system_gestion_tache,static/description/system.png"
+                  groups="group_project_user"/>
+
+        <!-- ============================================================ -->
+        <!-- SOUS-MENU: Projects                                          -->
+        <!-- ============================================================ -->
+        <menuitem id="menu_project_management_projects"
+                  name="Projets"
+                  parent="menu_project_management_root"
+                  sequence="10"/>
+
+        <!-- Menu: Tous les Projets -->
+        <menuitem id="menu_project_management_all_projects"
+                  name="Tous les Projets"
+                  parent="menu_project_management_projects"
+                  action="action_project_management"
+                  sequence="10"/>
+
+        <!-- Menu: Mes Projets -->
+        <menuitem id="menu_project_management_my_projects"
+                  name="Mes Projets"
+                  parent="menu_project_management_projects"
+                  action="action_project_management"
+                  sequence="20"/>
+
+        <!-- ============================================================ -->
+        <!-- SOUS-MENU: Sprints (temporairement désactivé)                -->
+        <!-- ============================================================ -->
+        <!--
+        <menuitem id="menu_project_management_sprints"
+                  name="Sprints"
+                  parent="menu_project_management_root"
+                  sequence="15"/>
+
+        <menuitem id="menu_project_management_sprint_board"
+                  name="Sprint Board"
+                  parent="menu_project_management_sprints"
+                  action="action_project_sprint_board"
+                  sequence="5"/>
+
+        <menuitem id="menu_project_management_all_sprints"
+                  name="Tous les Sprints"
+                  parent="menu_project_management_sprints"
+                  action="action_project_sprint"
+                  sequence="10"/>
+        -->
+
+        <!-- ============================================================ -->
+        <!-- SOUS-MENU: Tickets (temporairement désactivé)                -->
+        <!-- ============================================================ -->
+
+        <menuitem id="menu_project_management_tickets"
+                  name="Tickets"
+                  parent="menu_project_management_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_project_management_all_tickets"
+                  name="Tous les Tickets"
+                  parent="menu_project_management_tickets"
+                  action="action_project_ticket"
+                  sequence="10"/>
+
+        <menuitem id="menu_project_management_my_tickets"
+                  name="Mes Tickets"
+                  parent="menu_project_management_tickets"
+                  action="action_project_ticket"
+                  sequence="20"/>
+        -->
+
+        <!-- ============================================================ -->
+        <!-- SOUS-MENU: Rapports (à activer plus tard)                    -->
+        <!-- ============================================================ -->
+        <!--
+        <menuitem id="menu_project_management_reports"
+                  name="Rapports"
+                  parent="menu_project_management_root"
+                  sequence="30"/>
+        -->
+
+        <!-- ============================================================ -->
+        <!-- SOUS-MENU: Configuration                                     -->
+        <!-- ============================================================ -->
+        <menuitem id="menu_project_management_config"
+                  name="Configuration"
+                  parent="menu_project_management_root"
+                  sequence="90"
+                  groups="group_project_manager"/>
+
+    </data>
+</odoo>

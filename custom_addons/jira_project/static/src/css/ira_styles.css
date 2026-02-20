@@ -1,0 +1,135 @@
+/* ================================================= */
+/* Jira Project Management - Custom Styles          */
+/* ================================================= */
+
+/* Kanban Cards */
+.o_kanban_record {
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.o_kanban_record:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Overdue Tickets */
+.oe_kanban_card_danger {
+    border-left: 4px solid #dc3545 !important;
+}
+
+/* Priority Colors */
+.badge-priority-4 {
+    background-color: #d73027;
+    color: white;
+}
+
+.badge-priority-3 {
+    background-color: #fc8d59;
+    color: white;
+}
+
+.badge-priority-2 {
+    background-color: #fee090;
+    color: #333;
+}
+
+.badge-priority-1 {
+    background-color: #e0f3f8;
+    color: #333;
+}
+
+.badge-priority-0 {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* Ticket Type Badges */
+.badge-story {
+    background-color: #17a2b8;
+}
+
+.badge-task {
+    background-color: #28a745;
+}
+
+.badge-bug {
+    background-color: #dc3545;
+}
+
+.badge-epic {
+    background-color: #6f42c1;
+}
+
+.badge-subtask {
+    background-color: #6c757d;
+}
+
+/* Story Points Badge */
+.story-points-badge {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 4px 8px;
+}
+
+/* Kanban Column Headers */
+.o_kanban_group_title {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Progress Bars */
+.o_progressbar {
+    height: 8px;
+    border-radius: 4px;
+}
+
+/* Avatar Styling */
+.o_m2o_avatar {
+    border-radius: 50%;
+}
+
+/* Stat Buttons */
+.oe_stat_button {
+    border-radius: 4px;
+}
+
+/* Form View Improvements */
+.oe_title h1 {
+    font-weight: 600;
+}
+
+.oe_title h2 {
+    color: #6c757d;
+}
+
+/* Chatter Styling */
+.o_mail_thread {
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+}
+
+/* State Badges */
+.badge-draft {
+    background-color: #6c757d;
+}
+
+.badge-active {
+    background-color: #28a745;
+}
+
+.badge-completed {
+    background-color: #17a2b8;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+}
+
+/* Responsive Kanban */
+@media (max-width: 768px) {
+    .o_kanban_small_column {
+        min-width: 250px;
+    }
+}
