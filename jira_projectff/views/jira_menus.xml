@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_jira_root"
+              name="Jira PM"
+              sequence="10"
+              web_icon="jira_project,static/description/gestion.png"/>
+<!-- Dashboard Menu -->
+<menuitem id="menu_jira_dashboard"
+          name="Dashboard"
+          parent="menu_jira_root"
+          action="action_jira_dashboard"
+          sequence="5"/>
+    <!-- Projects Menu -->
+    <menuitem id="menu_jira_projects"
+              name="Projects"
+              parent="menu_jira_root"
+              sequence="10"/>
+
+    <menuitem id="menu_jira_project_all"
+              name="All Projects"
+              parent="menu_jira_projects"
+              action="action_jira_project"
+              sequence="10"/>
+
+    <menuitem id="menu_jira_workflow_states"
+              name="Workflow States"
+              parent="menu_jira_projects"
+              action="action_jira_workflow_state"
+              sequence="20"/>
+
+    <!-- Sprints Menu -->
+    <menuitem id="menu_jira_sprints"
+              name="Sprints"
+              parent="menu_jira_root"
+              sequence="20"/>
+
+    <menuitem id="menu_jira_sprint_all"
+              name="All Sprints"
+              parent="menu_jira_sprints"
+              action="action_jira_sprint_active"
+              sequence="10"/>
+
+    <!-- Tickets Menu -->
+    <menuitem id="menu_jira_tickets"
+              name="Tickets"
+              parent="menu_jira_root"
+              sequence="30"/>
+
+
+    <menuitem id="menu_jira_ticket_all"
+              name="All Tickets"
+              parent="menu_jira_tickets"
+              action="action_jira_ticket_all"
+              sequence="10"/>
+
+    <menuitem id="menu_jira_ticket_my"
+              name="My Tickets"
+              parent="menu_jira_tickets"
+              action="action_jira_ticket_my"
+              sequence="20"/>
+
+</odoo>

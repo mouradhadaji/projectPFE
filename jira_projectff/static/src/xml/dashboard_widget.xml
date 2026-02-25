@@ -1,0 +1,24 @@
+<t t-name="jira_project.DashboardWidget" owl="1">
+    <div class="dashboard_charts p-3">
+        <div class="charts_grid d-flex justify-content-between mb-4">
+            <div class="chart_card shadow-sm" style="width: 32%;">
+                <h3>Tickets by Status</h3>
+                <canvas t-ref="statusChart"/>
+            </div>
+            <div class="chart_card shadow-sm" style="width: 32%;">
+                <h3>Tickets by Type</h3>
+                <canvas t-ref="typeChart"/>
+            </div>
+            <div class="chart_card shadow-sm" style="width: 32%;">
+                <h3>Tickets by Priority</h3>
+                <canvas t-ref="priorityChart"/>
+            </div>
+        </div>
+
+        <div class="chart_card shadow-sm p-3 mt-4" style="width: 100%;">
+            <h3><i class="fa fa-line-chart"/> Project Burnup Progress</h3>
+            <div style="height: 300px;"> <canvas t-ref="burnupChart"/>
+            </div>
+        </div>
+    </div>
+</t>
