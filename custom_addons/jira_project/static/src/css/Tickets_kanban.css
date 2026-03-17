@@ -1,0 +1,27 @@
+/* Tickets kanban - supprimer background Odoo */
+.o_kanban_small_column .o_kanban_record.oe_kanban_card,
+.o_kanban_small_column .o_kanban_record {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Background sur le div direct */
+.o_kanban_small_column .o_kanban_record > div {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #dee2e6 !important;
+    background: white !important;
+    margin-bottom: 8px !important;
+}
+
+/* Header bleu */
+.o_kanban_small_column .o_kanban_record > div > div:first-child {
+    background-color: #FAD9AF !important;
+}
+
+/* Footer bleu */
+.o_kanban_small_column .o_kanban_record > div > div:last-child {
+    background-color: #FAD9AF !important;
+}
