@@ -1,5 +1,0 @@
-<template id="dashboard_assets" inherit_id="web.assets_backend">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/your_module/static/src/js/dashboard_chart.js"/>
-    </xpath>
-</template>

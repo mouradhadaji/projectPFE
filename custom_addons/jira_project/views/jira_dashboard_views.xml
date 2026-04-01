@@ -6,7 +6,7 @@
         <field name="model">jira.dashboard</field>
         <field name="arch" type="xml">
             <form string="Project Dashboard" class="o_dashboard_view">
-                <sheet class="jira_dashboard_sheet">
+                <sheet class="jira_dashboard_sheet" style="background-color: #F0DAB9;">
                     <!-- Header -->
                     <div class="dashboard_header">
                         <h1 class="dashboard_title">
@@ -60,9 +60,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Project Selection -->
-                    <group>
+                             <group>
                         <field name="project_ids" widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create': True}"
                                placeholder="Select projects for charts"/>
@@ -70,7 +68,7 @@
 
                     <!-- Donut Chart: Ticket Status -->
                     <div class="dashboard_charts" style="margin-top: 30px;">
-                        <div class="chart_card" style="padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div class="chart_card" style="padding: 20px; background: #F0DAB9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                                 <h3 style="margin: 0; color: #333;">Custom Charts for Jira</h3>
                             </div>
@@ -124,7 +122,7 @@
                             </div>
                         </div>
 
-                        <div style="background: white; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #F0DAB9; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #f5f5f5;">
                                 <div style="flex: 1;">
                                     <div style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -186,7 +184,7 @@
                             </div>
                         </div>
 
-                        <div style="background: white; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #F0DAB9; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                             <div style="margin-bottom: 20px;">
                                 <field name="sprint_id" options="{'no_create': True}" placeholder="Select a sprint..."/>
                             </div>
@@ -261,7 +259,7 @@
 
                    <!-- Team Velocity Gadget -->
                     <div class="dashboard_charts" style="margin-top: 30px;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="background:#F0DAB9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
 
                             <!-- BARRE DE CONTRÔLE — aucun onclick inline -->
                             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 15px; padding: 8px 12px; background: #f8f9fa; border-radius: 6px; border: 1px solid #e0e0e0; flex-wrap: wrap;">
@@ -397,7 +395,7 @@
 
                     <!-- Team Activity Chart -->
 <div class="dashboard_charts" style="margin-top: 30px;">
-    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <div style="background: #F0DAB9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
 
        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
     <h3 style="margin: 0; color: #333;">📈 Team Activity</h3>
@@ -434,7 +432,7 @@
     </div>
 </div>
 
-        <!-- ✅ Sélecteur de projet pour Team Activity -->
+
         <div style="margin-bottom: 15px;">
             <field name="activity_project_ids"
                 widget="many2many_tags"
@@ -450,7 +448,7 @@
 </div>
 
                     <!-- ═══ MEETINGS WIDGET ═══ -->
-     <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+     <div style="background: #E1D761; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
     <!-- Header -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h3 style="margin:0; color:#333; font-size:15px;">📅 Team Meetings</h3>
@@ -503,6 +501,20 @@
             <div id="cancelMeetingBtn" style="padding:6px 14px; border:1.5px solid #ddd; border-radius:6px; cursor:pointer; font-size:12px; color:#888;">Cancel</div>
             <div id="saveMeetingBtn" style="padding:6px 14px; background:#4f8ef7; color:white; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">Save Meeting</div>
         </div>
+         <div>
+    <span style="font-size:11px; color:#888; display:block; margin-bottom:4px;">Type de réunion</span>
+    <div style="display:flex; gap:8px;">
+        <div id="meetingTypePresential"
+            style="padding:6px 14px; border:1.5px solid #4f8ef7; border-radius:6px; cursor:pointer; font-size:12px; background:#eef3ff; color:#4f8ef7; font-weight:600;">
+            🏢 Présentiel
+        </div>
+        <div id="meetingTypeOnline"
+            style="padding:6px 14px; border:1.5px solid #ddd; border-radius:6px; cursor:pointer; font-size:12px; background:white; color:#888;">
+            💻 En Ligne
+        </div>
+        <input type="hidden" id="meetingTypeValue" value="presentiel"/>
+       </div>
+        </div>
     </div>
 
     <!-- Meetings List -->
@@ -510,6 +522,78 @@
         <div style="color:#bbb; font-size:12px; text-align:center; padding:20px;">Loading meetings...</div>
     </div>
 </div>
+                    <!-- ══════ YOUR EXISTING DASHBOARD CONTENT ABOVE ══════ -->
+
+
+                    <!-- ═══ PERFORMANCE ANALYZER ═══ -->
+                    <div class="dashboard_charts" style="margin-top: 30px;">
+                        <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                             color: white; padding: 18px 24px; border-radius: 8px 8px 0 0;">
+                            <div style="display: flex; justify-content: space-between;
+                                 align-items: center;">
+                                <h3 style="margin: 0; font-size: 18px; font-weight: 600;">
+                                    🤖 AI Performance Analyzer
+                                </h3>
+                                <span style="font-size: 12px; opacity: 0.8;">
+                                    Powered by ML Model
+                                </span>
+                            </div>
+                        </div>
+
+                        <div style="background: #F0DAB9; padding: 24px;
+                             border-radius: 0 0 8px 8px;
+                             box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+
+                            <div style="display: flex; gap: 12px; align-items: end;
+                                 margin-bottom: 20px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 220px;">
+                                    <label for="perf_project_id"
+                                           style="font-size: 12px; color: #555;
+                                                  font-weight: 600; display: block;
+                                                  margin-bottom: 4px;">
+                                        Select Project to Analyze
+                                    </label>
+                                    <field name="perf_project_id"
+                                           placeholder="— Select a project —"
+                                           style="width: 100%;"/>
+                                </div>
+
+                                <button name="action_analyze_project"
+                                        type="object"
+                                        class="btn btn-primary"
+                                        style="padding: 8px 18px; font-size: 13px;
+                                               font-weight: 600; border-radius: 6px;">
+                                    🔍 Analyze Project
+                                </button>
+
+                                <button name="action_analyze_team"
+                                        type="object"
+                                        class="btn"
+                                        style="padding: 8px 18px; background: #7c5cbf;
+                                               color: white; font-size: 13px;
+                                               font-weight: 600; border-radius: 6px;
+                                               border: none;">
+                                    👥 Full Team Report
+                                </button>
+
+                                <button name="action_clear_analysis"
+                                        type="object"
+                                        class="btn btn-secondary"
+                                        style="padding: 8px 14px; font-size: 13px;
+                                               border-radius: 6px;">
+                                    🗑️ Clear
+                                </button>
+                            </div>
+
+                            <field name="perf_mode" invisible="1"/>
+                            <field name="perf_raw_result" invisible="1"/>
+
+                            <field name="perf_result_html"
+                                   readonly="1"
+                                   nolabel="1"
+                                   class="w-100"/>
+                        </div>
+                    </div>
              </sheet>
             </form>
         </field>

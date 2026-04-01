@@ -3,6 +3,7 @@
     'name': 'Jira Project Management',
     'version': '18.0.1.0.0',
     'category': 'Project',
+
     'summary': 'Jira-style Project Management with Scrum',
     'description': """
         Jira-Style Project Management System
@@ -31,15 +32,26 @@
         'mail',
         'web',
     ],
-
+    'external_dependencies': {
+        'python': ['numpy', 'scikit-learn'],
+    },
     # Data files - loaded in order
     'data': [
         # Security (ALWAYS FIRST!)
+        'security/jira_groups.xml',
         'security/jira_security.xml',
+
         'security/ir.model.access.csv',
+     'data/jira_cron.xml',
+    'views/jira_report_views.xml',
+    'report/jira_sprint_report.xml',
+
+
 
         # Data
         'data/sequence.xml',
+        'data/ir_rule.xml',
+
 
         # Views (order matters for dependencies)
         'views/jira_workflow_views.xml',
@@ -56,14 +68,17 @@
     # Assets - CSS & JavaScript
     'assets': {
         'web.assets_backend': [
+            'jira_project/static/src/js/performance_analyzer.js',
             'jira_project/static/src/js/chart.umd.min.js',
             # JavaScript
             'jira_project/static/src/js/dashboard_chart.js',
-             'jira_project/static/src/js/ticket_status_donut.js',
-              'jira_project/static/src/js/sprint_burndown_v2.js',
+            'jira_project/static/src/js/ticket_status_donut.js',
+            'jira_project/static/src/js/sprint_burndown_v2.js',
 
             # CSS
             'jira_project/static/src/css/sprint_kanban.css',
+             'jira_project/static/src/css/Tickets_kanban.css',
+              'jira_project/static/src/css/navbar.css',
             'jira_project/static/src/css/dashboard.css',
         ],
     },
