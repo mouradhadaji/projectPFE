@@ -338,20 +338,20 @@ class PerformanceAnalyzer:
         blocked = tickets.filtered(lambda t: t.ticket_status == 'blocked')
         if blocked:
             risks.append({
-                'type': 'Blocked Tickets', 'level': 'High',
+                'type': 'Blocked Tickets', 'level': 'Haut',
                 'detail': f'{len(blocked)} blocked', 'color': '#dc3545',
             })
 
         unassigned = tickets.filtered(lambda t: not t.assignee_id)
         if len(unassigned) > total * 0.3:
             risks.append({
-                'type': 'Unassigned Tickets', 'level': 'Medium',
+                'type': 'Unassigned Tickets', 'level': 'Moyen',
                 'detail': f'{len(unassigned)} unassigned', 'color': '#ffc107',
             })
 
         if not risks:
             risks.append({
-                'type': 'No Major Risks', 'level': 'Low',
+                'type': 'No Major Risks', 'level': 'Faible',
                 'detail': 'On track', 'color': '#28a745',
             })
 

@@ -1,62 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Project List View -->
-    <record id="view_jira_project_list" model="ir.ui.view">
-        <field name="name">jira.project.list</field>
-        <field name="model">jira.project</field>
-        <field name="arch" type="xml">
-            <list string="Projects" decoration-muted="state=='cancelled'"
-                  decoration-success="state=='completed'">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="key"/>
-                <field name="project_lead_id" widget="many2one_avatar_user"/>
-                <field name="start_date"/>
-                <field name="end_date"/>
-                <field name="state" widget="badge"
-                       decoration-info="state=='draft'"
-                       decoration-success="state=='active'"
-                       decoration-warning="state=='on_hold'"
-                       decoration-muted="state=='cancelled'"/>
-                <field name="sprint_count"/>
-                <field name="active_sprint_count"/>
-                <field name="ticket_count"/>
-            </list>
-        </field>
-    </record>
-     <record model="ir.actions.act_window" id="action_jira_sprint_new">
-         <field name="res_model">jira.sprint</field>
+
+    <!-- ========================================
+         ACTIONS
+    ========================================= -->
+
+    <record model="ir.actions.act_window" id="action_jira_sprint_new">
+        <field name="name">New Sprint</field>
+        <field name="res_model">jira.sprint</field>
         <field name="view_mode">form</field>
-        <field name="domain">[('project_id','=',active_id)]</field>
+        <field name="target">new</field>
         <field name="context">{'default_project_id': active_id}</field>
     </record>
-    <!-- Action Sprint par Projet -->
-<record id="action_jira_sprint_from_project" model="ir.actions.act_window">
-    <field name="name">Project Sprints</field>
-    <field name="res_model">jira.sprint</field>
-    <field name="view_mode">kanban,list,form</field>
-    <field name="domain">[('project_id', '=', active_id)]</field>
-    <field name="context">{
-        'default_project_id': active_id,
-        'kanban_view_ref': 'jira_project.view_jira_sprint_kanban'
-    }</field>
-    <field name="help" type="html">
-        <p class="o_view_nocontent_smiling_face">
-            No sprints in this project yet
-        </p>
-    </field>
-</record>
-    <!-- Project Kanban View -->
+
+    <record id="action_jira_sprint_from_project" model="ir.actions.act_window">
+        <field name="name">Project Sprints</field>
+        <field name="res_model">jira.sprint</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="context">{
+            'default_project_id': active_id,
+            'kanban_view_ref': 'jira_project.view_jira_sprint_kanban'
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sprints in this project yet
+            </p>
+        </field>
+    </record>
+
+    <!-- ========================================
+         PROJECT KANBAN VIEW
+         Clic sur une carte → ouvre le form view
+         (pas d'attributs action/type="action")
+    ========================================= -->
     <record id="view_jira_project_kanban" model="ir.ui.view">
         <field name="name">jira.project.kanban</field>
         <field name="model">jira.project</field>
         <field name="arch" type="xml">
-            <kanban
-                class="o_hr_recruitment_kanban"
+            <kanban class="o_hr_recruitment_kanban" sample="1" limit="40">
 
-                sample="1"
-                limit="40"
-                action="%(action_jira_sprint_from_project)d" type="action">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="key"/>
@@ -66,114 +49,188 @@
                 <field name="end_date"/>
                 <field name="sprint_count"/>
                 <field name="ticket_count"/>
+                <field name="backlog_count"/>
                 <field name="project_lead_id"/>
 
                 <templates>
-                <t t-name="kanban-box">
-    <t t-set="state_color" t-value="record.state.raw_value == 'active' ? '#28a745' : record.state.raw_value == 'completed' ? '#17a2b8' : record.state.raw_value == 'on_hold' ? '#ffc107' : record.state.raw_value == 'cancelled' ? '#dc3545' : '#6c757d'"/>
+                    <t t-name="card">
+                        <t t-set="state_color"
+                           t-value="record.state.raw_value == 'active' ? '#28a745' :
+                                    record.state.raw_value == 'completed' ? '#17a2b8' :
+                                    record.state.raw_value == 'on_hold' ? '#ffc107' :
+                                    record.state.raw_value == 'cancelled' ? '#dc3545' : '#6c757d'"/>
 
-    <div style="border-radius: 12px; overflow: hidden; border: 1px solid #dee2e6; background: white;">
+                        <div style="border-radius: 12px; overflow: hidden; border: 1px solid #dee2e6; background: white;">
 
-        <!-- HEADER bleu -->
-        <div style="background-color: #185FA5; padding: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <strong style="font-size: 16px; color: white; font-weight: 600;">
-                        <field name="name"/>
-                    </strong>
-                    <div style="color: #B5D4F4; font-size: 12px; margin-top: 2px;">
-                        <field name="key"/>
-                    </div>
-                </div>
-                <div class="o_dropdown_kanban dropdown">
-                    <a class="dropdown-toggle o-no-caret btn" role="button"
-                       data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu">
-                        <span class="fa fa-ellipsis-v" style="color: white;"/>
-                    </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <div style="background-color: #185FA5; padding: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <strong style="font-size: 16px; color: white; font-weight: 600;">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div style="color: #B5D4F4; font-size: 12px; margin-top: 2px;">
+                                            <field name="key"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_dropdown_kanban dropdown">
+                                        <a class="dropdown-toggle o-no-caret btn"
+                                           role="button"
+                                           data-bs-toggle="dropdown"
+                                           href="#"
+                                           aria-label="Dropdown menu">
+                                            <span class="fa fa-ellipsis-v" style="color: white;"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-        <!-- CONTENU blanc -->
-        <div style="padding: 16px;">
-            <!-- Dates -->
-            <div style="display: flex; gap: 16px; margin-bottom: 12px;">
-                <div>
-                    <div style="font-size: 11px; color: #6c757d;">Start</div>
-                    <div style="font-size: 13px; font-weight: 500;"><field name="start_date"/></div>
-                </div>
-                <div>
-                    <div style="font-size: 11px; color: #6c757d;">End</div>
-                    <div style="font-size: 13px; font-weight: 500;"><field name="end_date"/></div>
-                </div>
-            </div>
+                            <div style="padding: 16px;">
 
-            <!-- Stats -->
-            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-                <span style="background: #e8f0fe; color: #185FA5; padding: 4px 10px; border-radius: 12px; font-size: 12px;">
-                    <i class="fa fa-tasks"/> <field name="sprint_count"/> Sprints
-                </span>
-                <span style="background: #e8f0fe; color: #185FA5; padding: 4px 10px; border-radius: 12px; font-size: 12px;">
-                    <i class="fa fa-ticket"/> <field name="ticket_count"/> Tickets
-                </span>
-            </div>
+                                <div style="display: flex; gap: 16px; margin-bottom: 12px;">
+                                    <div>
+                                        <div style="font-size: 11px; color: #6c757d;">Start</div>
+                                        <div style="font-size: 13px; font-weight: 500;">
+                                            <field name="start_date"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 11px; color: #6c757d;">End</div>
+                                        <div style="font-size: 13px; font-weight: 500;">
+                                            <field name="end_date"/>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <!-- Footer -->
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <field name="project_lead_id" widget="many2one_avatar_user"/>
-                <field name="state" widget="label_selection"
-                       options="{'classes': {'draft': 'secondary', 'active': 'success', 'on_hold': 'warning', 'completed': 'info', 'cancelled': 'danger'}}"/>
-            </div>
-        </div>
-    </div>
-</t>
+                                <div style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+                                    <span style="background: #e8f0fe; color: #185FA5; padding: 4px 10px; border-radius: 12px; font-size: 12px;">
+                                        <i class="fa fa-tasks" title="Sprints"/>
+                                        <field name="sprint_count"/> Sprints
+                                    </span>
+                                    <span style="background: #e8f0fe; color: #185FA5; padding: 4px 10px; border-radius: 12px; font-size: 12px;">
+                                        <i class="fa fa-ticket" title="Tickets"/>
+                                        <field name="ticket_count"/> Tickets
+                                    </span>
+                                    <span style="background: #fff3cd; color: #856404; padding: 4px 10px; border-radius: 12px; font-size: 12px;">
+                                        <i class="fa fa-list" title="Backlog"/>
+                                        <field name="backlog_count"/> Backlog
+                                    </span>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <field name="project_lead_id" widget="many2one_avatar_user"/>
+                                    <field name="state"
+                                           widget="label_selection"
+                                           options="{'classes': {
+                                               'draft': 'secondary',
+                                               'active': 'success',
+                                               'on_hold': 'warning',
+                                               'completed': 'info',
+                                               'cancelled': 'danger'
+                                           }}"/>
+                                </div>
+
+                            </div>
+                        </div>
+                    </t>
                 </templates>
             </kanban>
         </field>
     </record>
 
-    <!-- Project Form View -->
+    <!-- ========================================
+         PROJECT LIST VIEW
+    ========================================= -->
+    <record id="view_jira_project_list" model="ir.ui.view">
+        <field name="name">jira.project.list</field>
+        <field name="model">jira.project</field>
+        <field name="arch" type="xml">
+            <list string="Projects"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'completed'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="key"/>
+                <field name="project_lead_id" widget="many2one_avatar_user"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'on_hold'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="sprint_count"/>
+                <field name="active_sprint_count"/>
+                <field name="ticket_count"/>
+                <field name="backlog_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ========================================
+         PROJECT FORM VIEW
+    ========================================= -->
     <record id="view_jira_project_form" model="ir.ui.view">
         <field name="name">jira.project.form</field>
         <field name="model">jira.project</field>
         <field name="arch" type="xml">
             <form string="Project">
+
                 <header>
-                    <button name="action_set_active" string="Set Active"
-                            type="object" class="oe_highlight"
+                    <button name="action_set_active"
+                            string="Set Active"
+                            type="object"
+                            class="oe_highlight"
                             invisible="state == 'active'"/>
-                    <button name="action_set_completed" string="Complete"
-                            type="object" class="oe_highlight"
+                    <button name="action_set_completed"
+                            string="Complete"
+                            type="object"
+                            class="oe_highlight"
                             invisible="state == 'completed'"/>
-                    <field name="state" widget="statusbar"
+                    <field name="state"
+                           widget="statusbar"
                            statusbar_visible="draft,active,completed"/>
                 </header>
+
                 <sheet>
+
                     <div class="oe_button_box" name="button_box">
-                         <button class="oe_stat_button"
-            type="action"
-            name="%(action_jira_dashboard)d"
-            icon="fa-dashboard">
-        <div class="o_field_widget o_stat_info">
-            <span class="o_stat_text">Dashboard</span>
-        </div>
-    </button>
-                        <button class="oe_stat_button" type="object"
-                                name="action_view_sprints" icon="fa-tasks">
-                            <field string="Sprints" name="sprint_count" widget="statinfo"/>
+                        <button class="oe_stat_button"
+                                type="action"
+                                name="%(action_jira_dashboard)d"
+                                icon="fa-dashboard">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Dashboard</span>
+                            </div>
                         </button>
-                        <button class="oe_stat_button" type="object"
-                                name="action_view_tickets" icon="fa-ticket">
-                            <field string="Tickets" name="ticket_count" widget="statinfo"/>
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_view_sprints"
+                                icon="fa-tasks">
+                            <field string="Sprints"
+                                   name="sprint_count"
+                                   widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_view_tickets"
+                                icon="fa-ticket">
+                            <field string="Tickets"
+                                   name="ticket_count"
+                                   widget="statinfo"/>
                         </button>
                     </div>
-                    <field name="avatar_128" widget="image" class="oe_avatar"
+
+                    <field name="avatar_128"
+                           widget="image"
+                           class="oe_avatar"
                            options="{'size': [90, 90]}"/>
+
                     <div class="oe_title">
                         <label for="name" string="Project Name"/>
                         <h1>
@@ -183,6 +240,7 @@
                             <field name="key" placeholder="e.g., WEB" class="oe_inline"/>
                         </h2>
                     </div>
+
                     <group>
                         <group>
                             <field name="project_lead_id" widget="many2one_avatar_user"/>
@@ -196,14 +254,109 @@
                             <field name="active"/>
                         </group>
                     </group>
+
                     <notebook>
-                        <page string="Description" name="description">
-                            <field name="description" placeholder="Project description and goals..."/>
+
+                        <!-- ================================================
+                             ONGLET 1 : Sprints + Product Backlog
+                        ================================================ -->
+                        <page string="Sprints &amp; Backlog" name="sprints_backlog">
+
+                            <!-- SECTION SPRINTS -->
+                            <div style="margin-bottom: 8px; padding: 12px 0 8px 0; border-bottom: 2px solid #185FA5; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa fa-tasks" title="Sprints" style="color: #185FA5; font-size: 16px;"/>
+                                    <span style="font-size: 15px; font-weight: 600; color: #185FA5;">Sprints</span>
+                                    <span style="background: #e8f0fe; color: #185FA5; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                                        <field name="sprint_count" readonly="1"/>
+                                    </span>
+                                </div>
+                                <!-- ✅ type="object" → appelle action_create_sprint dans jira_project.py -->
+                                <button name="action_create_sprint"
+                                        string="+ New Sprint"
+                                        type="object"
+                                        class="btn btn-sm btn-primary"/>
+                            </div>
+
+                            <field name="sprint_ids" nolabel="1">
+                                <list decoration-bf="state == 'active'"
+                                      decoration-muted="state in ['completed', 'cancelled']">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="ticket_count"/>
+                                    <field name="progress" widget="progressbar"/>
+                                    <field name="total_story_points"/>
+                                    <field name="state"
+                                           widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state == 'active'"
+                                           decoration-muted="state in ['completed', 'cancelled']"/>
+                                </list>
+                            </field>
+
+                            <div style="margin: 24px 0;"/>
+
+                            <!-- SECTION PRODUCT BACKLOG -->
+                            <div style="margin-bottom: 8px; padding: 12px 0 8px 0; border-bottom: 2px solid #856404; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa fa-list" title="Backlog" style="color: #856404; font-size: 16px;"/>
+                                    <span style="font-size: 15px; font-weight: 600; color: #856404;">Product Backlog</span>
+                                    <span style="background: #fff3cd; color: #856404; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                                        <field name="backlog_count" readonly="1"/> tickets non assignés
+                                    </span>
+                                </div>
+                                <button name="action_create_backlog_ticket"
+                                        string="+ Add Ticket"
+                                        type="object"
+                                        class="btn btn-sm btn-warning"/>
+                            </div>
+
+                            <field name="ticket_ids"
+                                   domain="[('sprint_id', '=', False)]"
+                                   context="{'default_project_id': id}"
+                                   nolabel="1">
+                                <list editable="bottom"
+                                      decoration-danger="priority == '3'"
+                                      decoration-warning="priority == '2'"
+                                      decoration-muted="ticket_status == 'complete'">
+                                    <field name="sequence" widget="handle"/>
+
+                                    <field name="name" placeholder="Ticket name..."/>
+                                    <field name="ticket_type" widget="badge"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="story_points"/>
+                                    <field name="assignee_id" widget="many2one_avatar_user"/>
+                                    <field name="ticket_status"
+                                           widget="badge"
+                                           decoration-success="ticket_status == 'complete'"
+                                           decoration-warning="ticket_status == 'in_progress'"
+                                           decoration-info="ticket_status == 'done'"/>
+                                    <button name="action_move_to_sprint"
+                                            string="→ Sprint"
+                                            type="object"
+                                            icon="fa-arrow-right"
+                                            class="btn-sm btn-outline-primary"/>
+                                </list>
+                            </field>
+
                         </page>
+
+                        <!-- Tab: Description -->
+                        <page string="Description" name="description">
+                            <field name="description"
+                                   placeholder="Project description and goals..."/>
+                        </page>
+
+                        <!-- Tab: Team -->
                         <page string="Team" name="team">
-                            <field name="team_ids" widget="many2many_tags"
+                            <field name="team_ids"
+                                   widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                         </page>
+
+                        <!-- Tab: Workflow States -->
                         <page string="Workflow States" name="workflow">
                             <field name="workflow_state_ids">
                                 <list editable="bottom">
@@ -217,30 +370,23 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Sprints" name="sprints">
-                            <field name="sprint_ids">
-                                <list decoration-bf="state=='active'">
-                                    <field name="name"/>
-                                    <field name="start_date"/>
-                                    <field name="end_date"/>
-                                    <field name="ticket_count"/>
-                                    <field name="progress" widget="progressbar"/>
-                                    <field name="state" widget="badge"/>
-                                </list>
-                            </field>
-                        </page>
+
                     </notebook>
                 </sheet>
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </div>
+
             </form>
         </field>
     </record>
 
-    <!-- Project Search View -->
+    <!-- ========================================
+         PROJECT SEARCH VIEW
+    ========================================= -->
     <record id="view_jira_project_search" model="ir.ui.view">
         <field name="name">jira.project.search</field>
         <field name="model">jira.project</field>
@@ -249,7 +395,8 @@
                 <field name="name"/>
                 <field name="key"/>
                 <field name="project_lead_id"/>
-                <filter string="My Projects" name="my_projects"
+                <filter string="My Projects"
+                        name="my_projects"
                         domain="[('project_lead_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
@@ -263,7 +410,9 @@
         </field>
     </record>
 
-    <!-- Project Action -->
+    <!-- ========================================
+         PROJECT MAIN ACTION
+    ========================================= -->
     <record id="action_jira_project" model="ir.actions.act_window">
         <field name="name">Projects</field>
         <field name="res_model">jira.project</field>
@@ -278,4 +427,5 @@
             </p>
         </field>
     </record>
+
 </odoo>

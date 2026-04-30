@@ -59,7 +59,7 @@ class JiraProject(models.Model):
     # Avatar/Image
     avatar_128 = fields.Image(string='Avatar', max_width=128, max_height=128)
 
-    @api.depends('sprint_ids', 'ticket_ids')
+    @api.depends('sprint_ids', 'ticket_ids', 'ticket_ids.sprint_id')
     def _compute_counts(self):
         for project in self:
             project.sprint_count = len(project.sprint_ids)
@@ -67,7 +67,9 @@ class JiraProject(models.Model):
             project.active_sprint_count = len(project.sprint_ids.filtered(
                 lambda s: s.state == 'active'
             ))
-
+            project.backlog_count = len(project.ticket_ids.filtered(  # ← DANS la boucle !
+                lambda t: not t.sprint_id
+            ))
     @api.constrains('key')
     def _check_key_unique(self):
         for project in self:
@@ -124,7 +126,31 @@ class JiraProject(models.Model):
             }
         }
 
+    def action_create_backlog_ticket(self):
 
+        return {
+            'name': _('Add to Backlog'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'jira.ticket',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_project_id': self.id,
+                'default_sprint_id': False,
+            }
+        }
+
+    def action_create_sprint(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'New Sprint',
+            'res_model': 'jira.sprint',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_project_id': self.id,
+            },
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -132,7 +158,7 @@ class JiraProject(models.Model):
             raise UserError('Seul un Director peut créer un projet.')
         return super().create(vals_list)
 
-        def write(self, vals):
+    def write(self, vals):
             if self.env.user.has_group('jira_project.group_jira_director'):
                 return super().write(vals)
             raise UserError('Seul un Director peut modifier un projet.')
@@ -148,4 +174,16 @@ class JiraProject(models.Model):
         string='Manager',
         tracking=True,
         help='Manager assigned to this project'
+    )
+
+    backlog_ticket_ids = fields.One2many(
+        'jira.ticket',
+        'project_id',
+        string='Product Backlog',
+        domain=[('sprint_id', '=', False)]  # Tickets sans sprint = backlog
+    )
+
+    backlog_count = fields.Integer(
+        string='Backlog Count',
+        compute='_compute_counts'
     )

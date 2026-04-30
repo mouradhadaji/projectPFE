@@ -186,7 +186,7 @@
                             </div>
                         </div>
 
-                        <div style="background: #F0DAB9; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #FFFFFF; padding: 25px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                             <div style="margin-bottom: 20px;">
                                 <field name="sprint_id" options="{'no_create': True}" placeholder="Select a sprint..."/>
                             </div>

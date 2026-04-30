@@ -5,9 +5,9 @@
 
 /* Base */
 .o_main_navbar {
-    background: linear-gradient(90deg, #0D1B2A 0%, #1B2A3B 100%) !important;
+    background: linear-gradient(90deg, #FFFFFF 0%, #F5F5F5 100%) !important;
     border-bottom: 2px solid rgba(31,199,222,0.5) !important;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1) !important;
     height: 52px !important;
     padding: 0 24px !important;
     z-index: 1000 !important;
@@ -24,7 +24,7 @@
 
 /* Logo */
 .o_main_navbar .o_menu_brand {
-    color: white !important;
+    color: #0D1B2A !important;
     font-weight: 800 !important;
     font-size: 16px !important;
     letter-spacing: 2px !important;
@@ -42,7 +42,7 @@
 .o_main_navbar .o_menu_sections button span,
 .o_main_navbar .o_menu_sections .o_dropdown button,
 .o_main_navbar .o_menu_sections .o_dropdown_title {
-    color: rgba(255,255,255,0.85) !important;
+    color: rgba(13,27,42,0.85) !important;
     background: transparent !important;
     border: none !important;
     opacity: 1 !important;
@@ -58,7 +58,7 @@
 .o_main_navbar .o_nav_entry:hover,
 .o_main_navbar .o_menu_sections a:hover,
 .o_main_navbar .o_menu_sections button:hover {
-    color: white !important;
+    color: #0D1B2A !important;
     background: rgba(31,199,222,0.15) !important;
 }
 
@@ -66,7 +66,7 @@
 .o_main_navbar .o_menu_systray *,
 .o_main_navbar .o_menu_systray i,
 .o_main_navbar .o_menu_systray span {
-    color: rgba(255,255,255,0.85) !important;
+    color: rgba(13,27,42,0.85) !important;
     opacity: 1 !important;
 }
 
@@ -76,7 +76,7 @@
     color: white !important;
     font-weight: 700 !important;
     border-radius: 50% !important;
-    border: 2px solid #0D1B2A !important;
+    border: 2px solid #FFFFFF !important;
 }
 
 /* Avatar */
@@ -88,9 +88,9 @@
 
 /* Dropdown */
 .o_main_navbar .dropdown-menu {
-    background: #1B2A3B !important;
+    background: #FFFFFF !important;
     border-radius: 10px !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
     border: 1px solid rgba(31,199,222,0.15) !important;
     padding: 8px !important;
 }
@@ -99,7 +99,7 @@
     border-radius: 6px !important;
     padding: 9px 14px !important;
     font-size: 13px !important;
-    color: rgba(255,255,255,0.8) !important;
+    color: rgba(13,27,42,0.8) !important;
     transition: all 0.15s ease !important;
 }
 
@@ -108,9 +108,10 @@
     color: #1FC7DE !important;
 }
 
-.o_main_navbar .dropdown-divider {
-    border-color: rgba(255,255,255,0.08) !important;
+.o_main_navbar {
+    border-bottom: none !important;
 }
+
 /* Aligner les liens en bas de la navbar */
 .o_main_navbar .o_menu_sections {
     align-self: flex-end !important;
