@@ -1,0 +1,17 @@
+/* Renderer */
+.o_kanban_view.o_kanban_dashboard .o_kanban_renderer {
+    gap: 8px !important;
+    padding: 8px !important;
+    justify-content: flex-start !important;
+}
+
+/* Cartes */
+.o_kanban_view.o_kanban_dashboard article.o_kanban_record {
+    flex: 0 0 350px !important;
+    max-width: 350px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+}

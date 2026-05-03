@@ -1,0 +1,70 @@
+/* Supprimer background Odoo */
+.o_ticket_kanban .o_kanban_record {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 4px !important;
+}
+
+/* Carte ticket */
+.o_ticket_kanban .o_ticket_card {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #e8c88a !important;
+    margin-bottom: 4px !important;
+    background: #FAD9AF !important;
+}
+
+/* Contenu blanc */
+.o_ticket_kanban .o_ticket_card > div:nth-child(2) {
+    background: white !important;
+}
+
+/* Groupe background */
+.o_ticket_kanban .o_kanban_group {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Forcer sur oe_kanban_card aussi */
+.o_ticket_kanban .oe_kanban_card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+/* Supprimer background Odoo */
+.o_ticket_kanban .o_kanban_record {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 4px !important;
+}
+
+/* Carte ticket */
+.o_ticket_kanban .o_ticket_card {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #e8c88a !important;
+    margin-bottom: 4px !important;
+    background:#FAD9AF !important;
+}
+
+/* Contenu blanc */
+.o_ticket_kanban .o_ticket_card > div:nth-child(2) {
+    background: white !important;
+}
+
+/* Groupe background */
+.o_ticket_kanban .o_kanban_group {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Forcer sur oe_kanban_card aussi */
+.o_ticket_kanban .oe_kanban_card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}

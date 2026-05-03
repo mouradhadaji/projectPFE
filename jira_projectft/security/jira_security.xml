@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+
+        <!-- ═══ GROUPES ═══ -->
+
+
+        <!-- ═══ RÈGLES TICKETS ═══ -->
+
+        <!-- User voit seulement ses tickets assignés -->
+        <record id="jira_ticket_user_rule" model="ir.rule">
+            <field name="name">Jira Ticket: User can edit own tickets</field>
+            <field name="model_id" ref="model_jira_ticket"/>
+            <field name="domain_force">[
+                '|',
+                    ('assignee_id', '=', user.id),
+                    ('reporter_id', '=', user.id)
+            ]</field>
+            <field name="groups" eval="[(4, ref('group_jira_user'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Manager voit seulement les tickets de son projet -->
+        <record id="jira_ticket_manager_rule" model="ir.rule">
+            <field name="name">Jira Ticket: Manager sees assigned project tickets only</field>
+            <field name="model_id" ref="model_jira_ticket"/>
+            <field name="domain_force">['&amp;', ('project_id.manager_id', '!=', False), ('project_id.manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_jira_manager'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ═══ RÈGLES PROJETS ═══ -->
+
+        <!-- User ne voit aucun projet directement -->
+        <record id="jira_project_user_rule" model="ir.rule">
+            <field name="name">Jira Project: User sees nothing</field>
+            <field name="model_id" ref="model_jira_project"/>
+            <field name="domain_force">[('id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_jira_user'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Manager voit seulement son projet assigné -->
+        <record id="jira_project_manager_rule" model="ir.rule">
+            <field name="name">Jira Project: Manager sees assigned project only</field>
+            <field name="model_id" ref="model_jira_project"/>
+            <field name="domain_force">['&amp;', ('manager_id', '!=', False), ('manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_jira_manager'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- ═══ RÈGLES SPRINTS ═══ -->
+
+        <!-- User ne voit aucun sprint directement -->
+        <record id="jira_sprint_user_rule" model="ir.rule">
+            <field name="name">Jira Sprint: User sees nothing</field>
+            <field name="model_id" ref="model_jira_sprint"/>
+            <field name="domain_force">[('id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_jira_user'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Manager voit seulement les sprints de son projet -->
+        <record id="jira_sprint_manager_rule" model="ir.rule">
+            <field name="name">Jira Sprint: Manager sees assigned project sprints only</field>
+            <field name="model_id" ref="model_jira_sprint"/>
+            <field name="domain_force">['&amp;', ('project_id.manager_id', '!=', False), ('project_id.manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_jira_manager'))]"/>
+            <field name="perm_read"   eval="True"/>
+            <field name="perm_write"  eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+      <!-- Director voit tout — sprints -->
+     <record id="jira_sprint_director_rule" model="ir.rule">
+    <field name="name">Jira Sprint: Director sees all</field>
+    <field name="model_id" ref="model_jira_sprint"/>
+    <field name="domain_force">[(1, '=', 1)]</field>
+    <field name="groups" eval="[(4, ref('jira_project.group_jira_director'))]"/>
+    <field name="perm_read"   eval="True"/>
+    <field name="perm_write"  eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+     </record>
+    </data>
+</odoo>
