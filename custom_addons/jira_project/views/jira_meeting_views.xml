@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════
+         FORM VIEW
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_meeting_form" model="ir.ui.view">
+        <field name="name">jira.meeting.form</field>
+        <field name="model">jira.meeting</field>
+        <field name="arch" type="xml">
+            <form string="Meeting">
+                <header>
+                    <!-- ✨ Discuss Integration Buttons -->
+                    <button name="action_create_channel"
+                            string="💬 Créer Canal"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="channel_id"
+                            help="Créer un canal Odoo Discuss pour cette réunion"/>
+
+                    <button name="action_open_channel"
+                            string="💬 Ouvrir Canal"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not channel_id"/>
+
+                    <button name="action_start_call"
+                            string="📞 Démarrer Appel"
+                            type="object"
+                            class="btn-success"
+                            invisible="meeting_type != 'odoo_call'"/>
+
+                    <button name="action_send_invitation_chat"
+                            string="📨 Envoyer Invitations"
+                            type="object"
+                            class="btn-info"/>
+
+                    <button name="send_meeting_reminder"
+                            string="🔔 Envoyer Rappel"
+                            type="object"
+                            class="btn-warning"
+                            invisible="reminder_sent"/>
+                </header>
+
+                <sheet>
+                    <!-- Status badge -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_open_channel"
+                                icon="fa-comments"
+                                invisible="not channel_id">
+                            <field name="channel_id" widget="statinfo" string="Canal"/>
+                        </button>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <label for="name" string="Titre de la réunion"/>
+                        <h1>
+                            <field name="name" placeholder="ex: Sprint Review"/>
+                        </h1>
+                    </div>
+
+                    <!-- Main Info -->
+                    <group>
+                        <group string="📅 Informations">
+                            <field name="meeting_date"/>
+                            <field name="duration" widget="float_time"/>
+                            <field name="meeting_type" widget="radio"/>
+                            <field name="meet_url"
+                                   invisible="meeting_type == 'presentiel'"
+                                   widget="url"/>
+                        </group>
+
+                        <group string="📁 Contexte">
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="participant_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True, 'color_field': 'color'}"/>
+                        </group>
+                    </group>
+
+                    <!-- Notification Settings -->
+                    <group string="🔔 Notifications">
+                        <group>
+                            <field name="reminder_delay"/>
+                            <field name="reminder_sent" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="notify_by_email"/>
+                            <field name="notify_in_odoo"/>
+                        </group>
+                    </group>
+
+                    <!-- ✨ Discuss Settings -->
+                    <group string="💬 Odoo Discuss">
+                        <group>
+                            <field name="channel_id" readonly="1"
+                                   options="{'no_open': False}"/>
+                        </group>
+                        <group>
+                            <field name="auto_create_channel"/>
+                        </group>
+                    </group>
+
+                    <!-- Notes -->
+                    <notebook>
+                        <page string="📝 Notes" name="notes_page">
+                            <field name="notes"
+                                   placeholder="Ajoutez les notes de la réunion ici..."
+                                   nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         LIST VIEW
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_meeting_list" model="ir.ui.view">
+        <field name="name">jira.meeting.list</field>
+        <field name="model">jira.meeting</field>
+        <field name="arch" type="xml">
+            <list string="Meetings"
+                  decoration-success="meeting_type == 'odoo_call'"
+                  decoration-info="meeting_type == 'en_ligne'"
+                  decoration-muted="reminder_sent">
+                <field name="name"/>
+                <field name="meeting_date"/>
+                <field name="duration" widget="float_time"/>
+                <field name="meeting_type" widget="badge"
+                       decoration-success="meeting_type == 'odoo_call'"
+                       decoration-info="meeting_type == 'en_ligne'"/>
+                <field name="project_id" optional="show"/>
+                <field name="participant_ids" widget="many2many_tags" optional="show"/>
+                <field name="channel_id" optional="hide"/>
+                <field name="reminder_sent" widget="boolean_toggle" optional="show"/>
+                <button name="action_start_call"
+                        string="📞"
+                        type="object"
+                        class="btn-sm btn-success"
+                        invisible="meeting_type != 'odoo_call'"/>
+                <button name="action_open_channel"
+                        string="💬"
+                        type="object"
+                        class="btn-sm btn-secondary"
+                        invisible="not channel_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         KANBAN VIEW
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_meeting_kanban" model="ir.ui.view">
+        <field name="name">jira.meeting.kanban</field>
+        <field name="model">jira.meeting</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="meeting_date"/>
+                <field name="duration"/>
+                <field name="meeting_type"/>
+                <field name="project_id"/>
+                <field name="participant_ids"/>
+                <field name="channel_id"/>
+                <field name="reminder_sent"/>
+                <field name="meet_url"/>
+
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="edit" class="dropdown-item">
+                            <i class="fa fa-pencil me-2"/> Edit
+                        </a>
+                        <a role="menuitem" type="delete" class="dropdown-item text-danger">
+                            <i class="fa fa-trash me-2"/> Delete
+                        </a>
+                    </t>
+
+                    <t t-name="card">
+                        <t t-set="type_color"
+                           t-value="record.meeting_type.raw_value == 'odoo_call' ? '#1D9E75' :
+                                    record.meeting_type.raw_value == 'en_ligne' ? '#378ADD' : '#888'"/>
+                        <t t-set="type_icon"
+                           t-value="record.meeting_type.raw_value == 'odoo_call' ? '📞' :
+                                    record.meeting_type.raw_value == 'en_ligne' ? '💻' : '🏢'"/>
+
+                        <div t-attf-style="
+                            border-top: 3px solid #{type_color};
+                            border-radius: 0 0 10px 10px;
+                            background: white;
+                            padding: 0;
+                            min-height: 200px;
+                            transition: transform .15s ease, box-shadow .15s ease;"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,.12)';"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+
+                            <!-- Header -->
+                            <div style="padding: 14px 16px 10px; border-bottom: 1px solid #f0f0f0;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span style="font-size: 14px; font-weight: 600; color: #1a1a2e;">
+                                        <t t-out="type_icon"/> <field name="name"/>
+                                    </span>
+                                </div>
+                                <div style="font-size: 12px; color: #6c757d; margin-top: 6px;">
+                                    <i class="fa fa-folder-o" title="Project"/>
+                                    <field name="project_id"/>
+                                </div>
+                            </div>
+
+                            <!-- Body -->
+                            <div style="padding: 12px 16px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <div>
+                                        <div style="font-size: 10px; color: #999; text-transform: uppercase;">Date</div>
+                                        <div style="font-size: 12px; font-weight: 500; color: #333;">
+                                            <field name="meeting_date"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 10px; color: #999; text-transform: uppercase;">Durée</div>
+                                        <div style="font-size: 12px; font-weight: 500; color: #333;">
+                                            <field name="duration" widget="float_time"/> h
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                    <field name="participant_ids" widget="many2many_avatar_user"/>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div style="padding: 8px 16px; border-top: 1px solid #f0f0f0; background: #fafafa;
+                                        border-radius: 0 0 10px 10px; display: flex; justify-content: space-between;
+                                        align-items: center;"
+                                 onclick="event.stopPropagation();">
+                                <span t-if="record.reminder_sent.raw_value"
+                                      style="font-size: 10px; color: #1D9E75;">
+                                    ✅ Rappel envoyé
+                                </span>
+                                <span t-else=""
+                                      style="font-size: 10px; color: #888;">
+                                    ⏳ En attente
+                                </span>
+
+                                <div style="display: flex; gap: 4px;">
+                                    <button t-if="record.meeting_type.raw_value == 'odoo_call'"
+                                            name="action_start_call"
+                                            type="object"
+                                            class="btn btn-sm btn-success"
+                                            style="font-size: 10px; padding: 2px 8px;">
+                                        📞 Call
+                                    </button>
+                                    <button t-if="record.channel_id.raw_value"
+                                            name="action_open_channel"
+                                            type="object"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            style="font-size: 10px; padding: 2px 8px;">
+                                        💬
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         CALENDAR VIEW
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_meeting_calendar" model="ir.ui.view">
+        <field name="name">jira.meeting.calendar</field>
+        <field name="model">jira.meeting</field>
+        <field name="arch" type="xml">
+            <calendar string="Meetings"
+                      date_start="meeting_date"
+                      color="meeting_type"
+                      mode="month"
+                      quick_create="1">
+                <field name="name"/>
+                <field name="meeting_type"/>
+                <field name="project_id"/>
+                <field name="participant_ids" widget="many2many_avatar_user"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         SEARCH VIEW
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_meeting_search" model="ir.ui.view">
+        <field name="name">jira.meeting.search</field>
+        <field name="model">jira.meeting</field>
+        <field name="arch" type="xml">
+            <search string="Meetings">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="participant_ids"/>
+
+                <!-- Filters -->
+                <filter string="📅 Aujourd'hui"
+                        name="today"
+                        domain="[
+                            ('meeting_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                            ('meeting_date', '&lt;', datetime.datetime.combine(context_today() + datetime.timedelta(days=1), datetime.time(0,0,0)))
+                        ]"/>
+
+                <filter string="📆 Cette semaine"
+                        name="this_week"
+                        domain="[
+                            ('meeting_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')),
+                            ('meeting_date', '&lt;', (context_today() - datetime.timedelta(days=context_today().weekday()) + datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+
+                <filter string="🔮 À venir"
+                        name="upcoming"
+                        domain="[('meeting_date', '&gt;', datetime.datetime.now())]"/>
+
+                <filter string="📜 Passées"
+                        name="past"
+                        domain="[('meeting_date', '&lt;', datetime.datetime.now())]"/>
+
+                <separator/>
+
+                <filter string="🏢 Présentiel"
+                        name="presentiel"
+                        domain="[('meeting_type', '=', 'presentiel')]"/>
+
+                <filter string="💻 En ligne"
+                        name="en_ligne"
+                        domain="[('meeting_type', '=', 'en_ligne')]"/>
+
+                <filter string="📞 Odoo Call"
+                        name="odoo_call"
+                        domain="[('meeting_type', '=', 'odoo_call')]"/>
+
+                <separator/>
+
+                <filter string="🔔 Rappel envoyé"
+                        name="reminder_sent"
+                        domain="[('reminder_sent', '=', True)]"/>
+
+                <filter string="⏳ Rappel en attente"
+                        name="reminder_pending"
+                        domain="[('reminder_sent', '=', False)]"/>
+
+                <separator/>
+
+                <filter string="💬 Avec canal Discuss"
+                        name="with_channel"
+                        domain="[('channel_id', '!=', False)]"/>
+
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter string="Projet" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Type" name="group_type"
+                            context="{'group_by': 'meeting_type'}"/>
+                    <filter string="Date" name="group_date"
+                            context="{'group_by': 'meeting_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         ACTION
+         ═══════════════════════════════════════════════════════ -->
+    <record id="action_jira_meeting" model="ir.actions.act_window">
+        <field name="name">📅 Meetings</field>
+        <field name="res_model">jira.meeting</field>
+        <field name="view_mode">kanban,list,calendar,form</field>
+        <field name="search_view_id" ref="view_jira_meeting_search"/>
+        <field name="context">{
+            'search_default_upcoming': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première réunion
+            </p>
+            <p>
+                Organisez vos réunions en présentiel, en ligne ou via Odoo Discuss.
+            </p>
+        </field>
+    </record>
+
+
+    <!-- ════════════════════════════════════════════════════════
+         SUB-ACTIONS (Filtered)
+         ═══════════════════════════════════════════════════════ -->
+
+    <!-- Meetings du jour -->
+    <record id="action_jira_meeting_today" model="ir.actions.act_window">
+        <field name="name">📅 Réunions du jour</field>
+        <field name="res_model">jira.meeting</field>
+        <field name="view_mode">kanban,list,calendar,form</field>
+        <field name="context">{
+            'search_default_today': 1,
+        }</field>
+    </record>
+
+    <!-- Meetings à venir -->
+    <record id="action_jira_meeting_upcoming" model="ir.actions.act_window">
+        <field name="name">🔮 Réunions à venir</field>
+        <field name="res_model">jira.meeting</field>
+        <field name="view_mode">kanban,list,calendar,form</field>
+        <field name="context">{
+            'search_default_upcoming': 1,
+        }</field>
+    </record>
+
+</odoo>
