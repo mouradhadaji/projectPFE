@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- STANDUP ENTRY FORM -->
+    <record id="view_jira_standup_entry_form" model="ir.ui.view">
+        <field name="name">jira.standup.entry.form</field>
+        <field name="model">jira.standup.entry</field>
+        <field name="arch" type="xml">
+            <form string="Daily Standup">
+                <sheet>
+                    <!-- Banner -->
+                    <div style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+                                padding: 18px 24px; border-radius: 10px;
+                                margin-bottom: 20px; color: white;">
+                        <h2 style="margin: 0; color: white; font-size: 20px;">
+                            📊 Daily Standup
+                        </h2>
+                        <p style="margin: 4px 0 0; color: rgba(255,255,255,0.85); font-size: 12px;">
+                            Partagez votre progression et vos blockers
+                        </p>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="channel_id" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'on_track'"
+                                   decoration-warning="status == 'at_risk'"
+                                   decoration-danger="status == 'blocked'"/>
+                            <field name="ai_sentiment" widget="badge"
+                                   decoration-success="ai_sentiment == 'positive'"
+                                   decoration-warning="ai_sentiment == 'neutral'"
+                                   decoration-danger="ai_sentiment == 'negative'"/>
+                            <field name="ai_priority" widget="badge"
+                                   decoration-info="ai_priority == 'low'"
+                                   decoration-warning="ai_priority == 'medium'"
+                                   decoration-danger="ai_priority in ['high', 'urgent']"/>
+                            <field name="ai_blocker_score" widget="progressbar"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="✅ Done hier">
+                            <field name="done" nolabel="1"
+                                   placeholder="Ce que j ai accompli hier..."/>
+                        </group>
+                        <group string="🎯 Aujourd hui">
+                            <field name="today" nolabel="1"
+                                   placeholder="Ce que je vais faire aujourd hui..."/>
+                        </group>
+                    </group>
+
+                    <group string="🚧 Blockers">
+                        <field name="blockers" nolabel="1"
+                               placeholder="Obstacles ou problemes rencontres..."/>
+                    </group>
+
+                    <!-- AI Suggestions -->
+                    <group string="🤖 Suggestions IA">
+                        <field name="ai_suggestions" nolabel="1" readonly="1" widget="html"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- STANDUP ENTRY LIST -->
+    <record id="view_jira_standup_entry_list" model="ir.ui.view">
+        <field name="name">jira.standup.entry.list</field>
+        <field name="model">jira.standup.entry</field>
+        <field name="arch" type="xml">
+            <list string="Daily Standups"
+                  decoration-success="status == 'on_track'"
+                  decoration-warning="status == 'at_risk'"
+                  decoration-danger="status == 'blocked'">
+                <field name="date"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="channel_id" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'on_track'"
+                       decoration-warning="status == 'at_risk'"
+                       decoration-danger="status == 'blocked'"/>
+                <field name="ai_sentiment" widget="badge" optional="show"/>
+                <field name="ai_priority" widget="badge" optional="show"/>
+                <field name="ai_blocker_score" widget="progressbar" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- STANDUP ENTRY KANBAN -->
+    <record id="view_jira_standup_entry_kanban" model="ir.ui.view">
+        <field name="name">jira.standup.entry.kanban</field>
+        <field name="model">jira.standup.entry</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="id"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="status"/>
+                <field name="done"/>
+                <field name="today"/>
+                <field name="blockers"/>
+                <field name="ai_sentiment"/>
+                <field name="ai_priority"/>
+                <field name="ai_blocker_score"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div style="background: white; border-radius: 10px;
+                                    padding: 14px; min-height: 180px;
+                                    border-left: 3px solid #8B5CF6;">
+
+                            <div style="display: flex; justify-content: space-between;
+                                        align-items: center; margin-bottom: 10px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <div>
+                                        <div style="font-size: 13px; font-weight: 600; color: #1F2937;">
+                                            <field name="user_id"/>
+                                        </div>
+                                        <div style="font-size: 11px; color: #6B7280;">
+                                            <field name="date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div t-if="record.done.raw_value"
+                                 style="margin-bottom: 6px; font-size: 11px;">
+                                <span style="color: #16a34a; font-weight: 600;">✅ Done:</span>
+                                <span style="color: #4B5563;">
+                                    <t t-out="record.done.raw_value.slice(0, 60)"/>
+                                </span>
+                            </div>
+
+                            <div t-if="record.today.raw_value"
+                                 style="margin-bottom: 6px; font-size: 11px;">
+                                <span style="color: #3B82F6; font-weight: 600;">🎯 Today:</span>
+                                <span style="color: #4B5563;">
+                                    <t t-out="record.today.raw_value.slice(0, 60)"/>
+                                </span>
+                            </div>
+
+                            <div t-if="record.blockers.raw_value"
+                                 style="margin-bottom: 8px; font-size: 11px;">
+                                <span style="color: #dc2626; font-weight: 600;">🚧 Blocker:</span>
+                                <span style="color: #4B5563;">
+                                    <t t-out="record.blockers.raw_value.slice(0, 60)"/>
+                                </span>
+                            </div>
+
+                            <div style="display: flex; gap: 6px; margin-top: 10px;
+                                        flex-wrap: wrap;">
+                                <span t-if="record.ai_sentiment.raw_value == 'positive'"
+                                      style="background:#dcfce7;color:#15803d;
+                                             padding:2px 8px;border-radius:4px;
+                                             font-size:10px;font-weight:500;">
+                                    😊 Positif
+                                </span>
+                                <span t-if="record.ai_sentiment.raw_value == 'negative'"
+                                      style="background:#fee2e2;color:#b91c1c;
+                                             padding:2px 8px;border-radius:4px;
+                                             font-size:10px;font-weight:500;">
+                                    😟 Negatif
+                                </span>
+                                <span t-if="record.ai_priority.raw_value == 'urgent'"
+                                      style="background:#fef3c7;color:#92400e;
+                                             padding:2px 8px;border-radius:4px;
+                                             font-size:10px;font-weight:500;">
+                                    🔥 URGENT
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- STANDUP SEARCH -->
+    <record id="view_jira_standup_entry_search" model="ir.ui.view">
+        <field name="name">jira.standup.entry.search</field>
+        <field name="model">jira.standup.entry</field>
+        <field name="arch" type="xml">
+            <search string="Standups">
+                <field name="user_id"/>
+                <field name="channel_id"/>
+                <filter string="Aujourd hui" name="today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="7 derniers jours" name="last_week"
+                        domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="On Track" name="on_track"
+                        domain="[('status', '=', 'on_track')]"/>
+                <filter string="At Risk" name="at_risk"
+                        domain="[('status', '=', 'at_risk')]"/>
+                <filter string="Blocked" name="blocked"
+                        domain="[('status', '=', 'blocked')]"/>
+                <separator/>
+                <filter string="Urgent" name="urgent"
+                        domain="[('ai_priority', '=', 'urgent')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Membre" name="group_user"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Date" name="group_date"
+                            context="{'group_by': 'date'}"/>
+                    <filter string="Status" name="group_status"
+                            context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

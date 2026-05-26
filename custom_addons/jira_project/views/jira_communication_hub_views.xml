@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════
+         HUB FORM (Quick Action Center) - PROFESSIONAL UI
+         ═══════════════════════════════════════════════════════ -->
+    <record id="view_jira_communication_hub_form" model="ir.ui.view">
+        <field name="name">jira.communication.hub.form</field>
+        <field name="model">jira.communication</field>
+        <field name="arch" type="xml">
+            <form string="Communication" create="false" edit="false">
+                <sheet>
+
+                    <!-- Project Selector Card -->
+                    <div style="background: white; padding: 20px 24px;
+                                border-radius: 12px;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                                border: 1px solid #E5E7EB;
+                                margin-bottom: 24px;">
+                        <label for="project_id"
+                               style="font-size: 12px; font-weight: 700;
+                                      color: #6B7280; margin-bottom: 10px;
+                                      display: block; text-transform: uppercase;
+                                      letter-spacing: 0.5px;">
+                            📁 Step 1 : Select Project
+                        </label>
+                       <field name="project_id" nolabel="1"
+       widget="many2one"
+       options="{'no_create': True, 'no_open': True}"
+       placeholder="Choose your project..."
+       style="width: 100%; padding: 8px;"/>
+                    </div>
+
+                    <!-- Section Title -->
+                    <div style="margin-bottom: 16px;">
+                        <h3 style="margin: 0; color: #374151; font-size: 16px;
+                                   font-weight: 700;">
+                            ⚡ Step 2 : Choose Action
+                        </h3>
+                        <p style="margin: 4px 0 0; color: #9CA3AF; font-size: 13px;">
+                            Click on any card below to get started
+                        </p>
+                    </div>
+
+                    <!-- 4 Action Cards using Table Layout -->
+                    <table style="width: 100%; border-collapse: separate;
+                                  border-spacing: 12px; margin: 0 -12px;">
+                        <tr>
+                            <!-- Daily Standup Card -->
+                            <td style="width: 50%; padding: 0;">
+                                <div style="background: linear-gradient(135deg,#177BEB 0%,#9EE2EB 100%);
+                                            border-radius: 12px;
+                                            padding: 24px;
+                                            box-shadow: 0 4px 14px rgba(139,92,246,0.25);
+                                            min-height: 160px;
+                                            position: relative;">
+                                    <div style="font-size: 38px; margin-bottom: 8px;">📊</div>
+                                    <div style="font-size: 18px; font-weight: 700;
+                                                color: white; margin-bottom: 6px;">
+                                        Daily Standup
+                                    </div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.85);
+                                                margin-bottom: 14px; line-height: 1.4;">
+                                        Share your progress with AI sentiment analysis
+                                    </div>
+                                    <button name="action_quick_standup"
+                                            type="object"
+                                            string="📊 Start Standup →"
+                                            class="btn"
+                                            style="background: white; color: #177BEB;
+                                                   border: none; border-radius: 8px;
+                                                   padding: 8px 16px; font-size: 12px;
+                                                   font-weight: 600; cursor: pointer;
+                                                   box-shadow: 0 2px 6px rgba(0,0,0,0.1);"/>
+                                </div>
+                            </td>
+
+                            <!-- Meeting Card -->
+                            <td style="width: 50%; padding: 0;">
+                                <div style="background: linear-gradient(135deg, #177BEB 0%,#9EE2EB 100%);
+                                            border-radius: 12px;
+                                            padding: 24px;
+                                            box-shadow: 0 4px 14px rgba(59,130,246,0.25);
+                                            min-height: 160px;">
+                                    <div style="font-size: 38px; margin-bottom: 8px;">📅</div>
+                                    <div style="font-size: 18px; font-weight: 700;
+                                                color: white; margin-bottom: 6px;">
+                                        Schedule Meeting
+                                    </div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.85);
+                                                margin-bottom: 14px; line-height: 1.4;">
+                                        Plan in-person or online meetings
+                                    </div>
+                                    <button name="action_quick_meeting"
+                                            type="object"
+                                            string="📅 Create Meeting →"
+                                            class="btn"
+                                            style="background: white; color: #177BEB;
+                                                   border: none; border-radius: 8px;
+                                                   padding: 8px 16px; font-size: 12px;
+                                                   font-weight: 600; cursor: pointer;
+                                                   box-shadow: 0 2px 6px rgba(0,0,0,0.1);"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <!-- Announcement Card -->
+                            <td style="padding: 0;">
+                                <div style="background: linear-gradient(135deg, #177BEB 0%,#9EE2EB 100%);
+                                            border-radius: 12px;
+                                            padding: 24px;
+                                            box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+                                            min-height: 160px;">
+                                    <div style="font-size: 38px; margin-bottom: 8px;">📢</div>
+                                    <div style="font-size: 18px; font-weight: 700;
+                                                color: white; margin-bottom: 6px;">
+                                        Announcement
+                                    </div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.85);
+                                                margin-bottom: 14px; line-height: 1.4;">
+                                        Broadcast important messages to team
+                                    </div>
+                                    <button name="action_quick_announcement"
+                                            type="object"
+                                            string="📢 Send Announcement →"
+                                            class="btn"
+                                            style="background: white; color: #177BEB;
+                                                   border: none; border-radius: 8px;
+                                                   padding: 8px 16px; font-size: 12px;
+                                                   font-weight: 600; cursor: pointer;
+                                                   box-shadow: 0 2px 6px rgba(0,0,0,0.1);"/>
+                                </div>
+                            </td>
+
+                            <!-- Odoo Live Card -->
+                   <td style="padding: 0;">
+                    <div style="background: linear-gradient(135deg, #177BEB 0%,#9EE2EB 100%);
+                                            border-radius: 12px;
+                                            padding: 24px;
+                                            box-shadow: 0 4px 14px rgba(236,72,153,0.25);
+                                            min-height: 160px;">
+                                    <div style="font-size: 38px; margin-bottom: 8px;">🎥</div>
+                                    <div style="font-size: 18px; font-weight: 700;
+                                                color: white; margin-bottom: 6px;">
+                                        Odoo Live
+                                    </div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.85);
+                                                margin-bottom: 14px; line-height: 1.4;">
+                                        Real-time chat &amp; video calls
+                                    </div>
+                                    <button name="action_quick_live"
+                                            type="object"
+                                            string="🎥 Open Live →"
+                                            class="btn"
+                                            style="background: white; color: #177BEB;
+                                                   border: none; border-radius: 8px;
+                                                   padding: 8px 16px; font-size: 12px;
+                                                   font-weight: 600; cursor: pointer;
+                                                   box-shadow: 0 2px 6px rgba(0,0,0,0.1);"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Advanced Access -->
+                    <div style="text-align: center; margin-top: 24px;
+                                padding-top: 20px; border-top: 1px solid #177BEB;">
+                        <button name="action_view_channels"
+                                type="object"
+                                string="🔧 Advanced : Manage Channels"
+                                class="btn btn-sm btn-secondary"
+                                groups="jira_project.group_jira_manager"/>
+                    </div>
+
+                    <!-- Helper Tip -->
+                    <div style="background: linear-gradient(90deg,#177BEB 0%,#9EE2EB 100%);
+                                padding: 14px 18px; border-radius: 10px;
+                                margin-top: 20px;
+                                border-left: 4px solid #F6F6EC;">
+                        <div style="font-size: 13px; color: #F6F6EC; line-height: 1.5;">
+                            <b> How it works :</b> Select your project, then click on any
+                            action card. The communication channel is automatically created
+                            and managed for you.
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════
+         ACTION
+         ═══════════════════════════════════════════════════════ -->
+    <record id="action_jira_communication_hub" model="ir.actions.act_window">
+        <field name="name">💬 Communication</field>
+        <field name="res_model">jira.communication.hub</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_jira_communication_hub_form"/>
+        <field name="target">current</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════
+         MENU
+         ═══════════════════════════════════════════════════════ -->
+    <menuitem id="menu_jira_communication_hub"
+              name="💬 Communication"
+              parent="menu_jira_root"
+              action="action_jira_communication_hub"
+              sequence="25"
+              groups="jira_project.group_jira_user"/>
+
+</odoo>

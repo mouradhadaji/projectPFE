@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════
+         COMMUNICATION CHANNEL - LIST
+         ════════════════════════════════════════════════ -->
+    <record id="view_jira_communication_channel_list" model="ir.ui.view">
+        <field name="name">jira.communication.channel.list</field>
+        <field name="model">jira.communication.channel</field>
+        <field name="arch" type="xml">
+            <list string="Communication Channels"
+                  decoration-muted="state == 'archived'">
+                <field name="name"/>
+                <field name="channel_type" widget="badge"/>
+                <field name="project_id"/>
+                <field name="creator_id"/>
+                <field name="member_ids" widget="many2many_avatar_user" optional="show"/>
+                <field name="meeting_count" string="Reunions"/>
+                <field name="announcement_count" string="Annonces"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'archived'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         COMMUNICATION CHANNEL - KANBAN
+         ════════════════════════════════════════════════ -->
+    <record id="view_jira_communication_channel_kanban" model="ir.ui.view">
+        <field name="name">jira.communication.channel.kanban</field>
+        <field name="model">jira.communication.channel</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="channel_type" class="o_kanban_dashboard">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="channel_type"/>
+                <field name="project_id"/>
+                <field name="member_ids"/>
+                <field name="meeting_count"/>
+                <field name="announcement_count"/>
+                <field name="color"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div style="background: white; border-radius: 12px;
+                                    border-top: 3px solid #3B82F6; padding: 16px;
+                                    min-height: 200px;">
+
+                            <!-- Header -->
+                            <div style="display: flex; justify-content: space-between;
+                                        align-items: center; margin-bottom: 12px;">
+                                <h3 style="margin: 0; font-size: 16px; font-weight: 600;
+                                           color: #1F2937;">
+                                    💬 <field name="name"/>
+                                </h3>
+                            </div>
+
+                            <!-- Type badge -->
+                            <div style="margin-bottom: 10px;">
+                                <span style="background: #DBEAFE; color: #1E40AF;
+                                             padding: 3px 10px; border-radius: 6px;
+                                             font-size: 11px; font-weight: 500;">
+                                    <field name="channel_type"/>
+                                </span>
+                            </div>
+
+                            <!-- Project -->
+                            <div t-if="record.project_id.raw_value"
+                                 style="font-size: 13px; color: #6B7280;
+                                        margin-bottom: 10px;">
+                                📁 <field name="project_id"/>
+                            </div>
+
+                            <!-- Stats -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr;
+                                        gap: 8px; margin: 12px 0;">
+                                <div style="background: #F3F4F6; padding: 8px;
+                                            border-radius: 6px; text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 600;
+                                                color: #3B82F6;">
+                                        <field name="meeting_count"/>
+                                    </div>
+                                    <div style="font-size: 10px; color: #6B7280;
+                                                text-transform: uppercase;">
+                                        Reunions
+                                    </div>
+                                </div>
+                                <div style="background: #F3F4F6; padding: 8px;
+                                            border-radius: 6px; text-align: center;">
+                                    <div style="font-size: 18px; font-weight: 600;
+                                                color: #10B981;">
+                                        <field name="announcement_count"/>
+                                    </div>
+                                    <div style="font-size: 10px; color: #6B7280;
+                                                text-transform: uppercase;">
+                                        Annonces
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Members -->
+                            <div style="margin-top: 10px;">
+                                <field name="member_ids"
+                                       widget="many2many_avatar_user"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         COMMUNICATION CHANNEL - FORM
+         ════════════════════════════════════════════════ -->
+    <record id="view_jira_communication_channel_form" model="ir.ui.view">
+        <field name="name">jira.communication.channel.form</field>
+        <field name="model">jira.communication.channel</field>
+        <field name="arch" type="xml">
+            <form string="Canal de Communication">
+                <header>
+                    <button name="action_new_meeting"
+                            string="📅 Programmer une reunion"
+                            type="object" class="oe_highlight"
+                            groups="jira_project.group_jira_manager"/>
+                    <button name="action_new_announcement"
+                            string="📢 Nouvelle annonce"
+                            type="object" class="btn-primary"
+                            groups="jira_project.group_jira_manager"/>
+                    <button name="action_archive"
+                            string="Archiver"
+                            type="object"
+                            invisible="state == 'archived'"
+                            groups="jira_project.group_jira_manager"/>
+                    <button name="action_unarchive"
+                            string="Reactiver"
+                            type="object"
+                            invisible="state == 'active'"
+                            groups="jira_project.group_jira_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="active,archived"/>
+                </header>
+
+                <sheet>
+                    <!-- Banner -->
+                    <div style="background: linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%);
+                                padding: 20px 28px; border-radius: 12px;
+                                margin-bottom: 20px; color: white;
+                                display: flex; justify-content: space-between;
+                                align-items: center;">
+                        <div>
+                            <h2 style="margin: 0; color: white; font-size: 22px;">
+                                💬 Canal de Communication
+                            </h2>
+                            <p style="margin: 6px 0 0; color: rgba(255,255,255,0.85);
+                                      font-size: 13px;">
+                                Centralisez vos echanges et reunions
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d action -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_meetings" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="meeting_count" widget="statinfo"
+                                   string="Reunions"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom du canal..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Informations">
+                            <field name="channel_type" widget="radio"
+                                   options="{'horizontal': true}"/>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="creator_id" readonly="1"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1"
+                                   placeholder="Decrivez l objectif de ce canal..."/>
+                        </group>
+                    </group>
+
+                    <group string="👥 Membres">
+                        <field name="member_ids" nolabel="1"
+                               widget="many2many_avatar_user"
+                               options="{'no_create': True}"/>
+                    </group>
+
+                    <notebook>
+                        <!-- Onglet Annonces -->
+                        <page string="📢 Annonces" name="announcements">
+                            <field name="message_announcement_ids" nolabel="1">
+                                <list editable="bottom"
+                                      decoration-info="priority == '1'"
+                                      decoration-danger="priority == '2'">
+                                    <field name="date" readonly="1"/>
+                                    <field name="subject"/>
+                                    <field name="author_id" widget="many2one_avatar_user"
+                                           readonly="1"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="recipient_ids" widget="many2many_avatar_user"/>
+                                    <button name="action_send"
+                                            string="Envoyer"
+                                            type="object"
+                                            class="btn-sm btn-primary"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Onglet Reunions -->
+                        <page string="📅 Reunions" name="meetings">
+                            <field name="meeting_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="meeting_date"/>
+                                    <field name="duration"/>
+                                    <field name="meeting_type" widget="badge"/>
+                                    <field name="participant_ids"
+                                           widget="many2many_avatar_user"/>
+                                    <field name="meet_url" widget="url"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         CHANNEL MESSAGE - FORM (popup)
+         ════════════════════════════════════════════════ -->
+    <record id="view_jira_channel_message_form" model="ir.ui.view">
+        <field name="name">jira.channel.message.form</field>
+        <field name="model">jira.channel.message</field>
+        <field name="arch" type="xml">
+            <form string="Nouvelle annonce">
+                <sheet>
+                    <div style="background: #3B82F6; padding: 16px 24px;
+                                border-radius: 10px; margin-bottom: 20px;
+                                color: white;">
+                        <h2 style="margin: 0; color: white;">
+                            📢 Nouvelle annonce
+                        </h2>
+                    </div>
+
+                    <group>
+                        <field name="channel_id" readonly="1"/>
+                        <field name="subject" placeholder="Sujet de l annonce..."/>
+                        <field name="priority" widget="priority"/>
+                        <field name="recipient_ids" widget="many2many_avatar_user"
+                               options="{'no_create': True}"/>
+                    </group>
+
+                    <group string="Contenu">
+                        <field name="content" nolabel="1"
+                               placeholder="Tapez votre message ici..."/>
+                    </group>
+
+                    <group string="Pieces jointes">
+                        <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_send"
+                            string="📨 Envoyer l annonce"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         SEARCH
+         ════════════════════════════════════════════════ -->
+    <record id="view_jira_communication_channel_search" model="ir.ui.view">
+        <field name="name">jira.communication.channel.search</field>
+        <field name="model">jira.communication.channel</field>
+        <field name="arch" type="xml">
+            <search string="Canaux">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="channel_type"/>
+                <filter string="Actifs" name="active"
+                        domain="[('state', '=', 'active')]"/>
+                <filter string="Archives" name="archived"
+                        domain="[('state', '=', 'archived')]"/>
+                <separator/>
+                <filter string="Canal projet" name="type_project"
+                        domain="[('channel_type', '=', 'project')]"/>
+                <filter string="Message direct" name="type_direct"
+                        domain="[('channel_type', '=', 'direct')]"/>
+                <filter string="Annonce generale" name="type_broadcast"
+                        domain="[('channel_type', '=', 'broadcast')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Projet" name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Type" name="group_type"
+                            context="{'group_by': 'channel_type'}"/>
+                    <filter string="Createur" name="group_creator"
+                            context="{'group_by': 'creator_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         ACTION
+         ════════════════════════════════════════════════ -->
+    <record id="action_jira_communication_channel" model="ir.actions.act_window">
+        <field name="name">Communication Channels</field>
+        <field name="res_model">jira.communication.channel</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_jira_communication_channel_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Creez votre premier canal de communication
+            </p>
+            <p>
+                Les canaux de communication permettent de centraliser :
+                <br/>📢 Les annonces du Director aux membres
+                <br/>📅 Les reunions planifiees (Odoo Live ou Google Meet)
+                <br/>💬 Les discussions par projet
+            </p>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════
+         MENU
+         ════════════════════════════════════════════════ -->
+    <menuitem id="menu_jira_communication"
+              name="💬 Communication"
+              parent="menu_jira_root"
+              action="action_jira_communication_channel"
+              sequence="25"
+              groups="jira_project.group_jira_user"/>
+
+</odoo>
